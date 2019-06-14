@@ -10,4 +10,8 @@
   (testing "For all items except Sulfuras, sell in date decreases by one"
     (let [any-item {:name "any item" :sell-in 20 :quality 30}
           updated-sell-in 19]
-      (is (= updated-sell-in (:sell-in (first (update-quality [any-item]))))))))
+      (is (= updated-sell-in (:sell-in (first (update-quality [any-item])))))))
+  (testing "Aged Brie increases in quality the older it gets"
+    (let [aged-brie (item "Aged Brie" 5 5)
+          updated-quality 6]
+      (is (= updated-quality (:quality (first (update-quality [aged-brie]))))))))
