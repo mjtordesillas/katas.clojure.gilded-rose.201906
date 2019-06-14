@@ -18,4 +18,8 @@
   (testing "Sulfuras quality never changes"
     (let [sulfuras (item "Sulfuras, Hand of Ragnaros" 5 5)
           updated-quality 5]
-      (is (= updated-quality (:quality (first (update-quality [sulfuras]))))))))
+      (is (= updated-quality (:quality (first (update-quality [sulfuras])))))))
+  (testing "Sulfuras never ages"
+    (let [sulfuras (item "Sulfuras, Hand of Ragnaros" 5 5)
+          updated-sell-in 5]
+      (is (= updated-sell-in (:sell-in (first (update-quality [sulfuras]))))))))
