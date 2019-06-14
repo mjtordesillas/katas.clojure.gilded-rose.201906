@@ -22,4 +22,8 @@
   (testing "Sulfuras never ages"
     (let [sulfuras (item "Sulfuras, Hand of Ragnaros" 5 5)
           updated-sell-in 5]
-      (is (= updated-sell-in (:sell-in (first (update-quality [sulfuras]))))))))
+      (is (= updated-sell-in (:sell-in (first (update-quality [sulfuras])))))))
+  (testing "The quality of an item is never more than 50"
+    (let [aged-brie (item "Aged Brie" 5 50)
+          updated-quality 50]
+      (is (= updated-quality (:quality (first (update-quality [aged-brie]))))))))
