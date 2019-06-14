@@ -34,4 +34,8 @@
   (testing "Backstage passes increases in quality as sell in date approaches"
     (let [backstage-passes (item "Backstage passes to a TAFKAL80ETC concert" 20 0)
           updated-quality 1]
+      (is (= updated-quality (:quality (first (update-quality [backstage-passes])))))))
+  (testing "Backstage passes increases in quality by two when sell in is 10 or less"
+    (let [backstage-passes (item "Backstage passes to a TAFKAL80ETC concert" 10 0)
+          updated-quality 2]
       (is (= updated-quality (:quality (first (update-quality [backstage-passes]))))))))
