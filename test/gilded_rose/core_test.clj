@@ -14,4 +14,8 @@
   (testing "Aged Brie increases in quality the older it gets"
     (let [aged-brie (item "Aged Brie" 5 5)
           updated-quality 6]
-      (is (= updated-quality (:quality (first (update-quality [aged-brie]))))))))
+      (is (= updated-quality (:quality (first (update-quality [aged-brie])))))))
+  (testing "Sulfuras quality never changes"
+    (let [sulfuras (item "Sulfuras, Hand of Ragnaros" 5 5)
+          updated-quality 5]
+      (is (= updated-quality (:quality (first (update-quality [sulfuras]))))))))
