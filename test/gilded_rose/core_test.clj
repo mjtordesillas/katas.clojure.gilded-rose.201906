@@ -26,4 +26,8 @@
   (testing "The quality of an item is never more than 50"
     (let [aged-brie (item "Aged Brie" 5 50)
           updated-quality 50]
-      (is (= updated-quality (:quality (first (update-quality [aged-brie]))))))))
+      (is (= updated-quality (:quality (first (update-quality [aged-brie])))))))
+  (testing "The quality of an item is never negative"
+    (let [normal-item (item "+5 Dexterity Vest" 5 0)
+          updated-quality 0]
+      (is (= updated-quality (:quality (first (update-quality [normal-item]))))))))
