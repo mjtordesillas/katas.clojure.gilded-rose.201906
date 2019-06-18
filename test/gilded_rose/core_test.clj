@@ -23,14 +23,24 @@
     (let [aged-brie (item "Aged Brie" 5 5)
           updated-quality 6]
       (is (= updated-quality (:quality (first (update-quality [aged-brie])))))))
+  (testing "Aged Brie increases in quality twice as fast after sell by date"
+    (let [aged-brie (item "Aged Brie" 0 5)
+          updated-quality 7]
+      (is (= updated-quality (:quality (first (update-quality [aged-brie])))))))
   (testing "Sulfuras quality never changes"
     (let [sulfuras (item "Sulfuras, Hand of Ragnaros" 5 5)
           updated-quality 5]
       (is (= updated-quality (:quality (first (update-quality [sulfuras])))))))
   (testing "The quality of an item is never more than 50"
     (let [aged-brie (item "Aged Brie" 5 50)
-          updated-quality 50]
-      (is (= updated-quality (:quality (first (update-quality [aged-brie])))))))
+          backstage-passes-far (item "Backstage passes to a TAFKAL80ETC concert" 20 50)
+          backstage-passes-close (item "Backstage passes to a TAFKAL80ETC concert" 10 50)
+          backstage-passes-very-close (item "Backstage passes to a TAFKAL80ETC concert" 5 50)
+          maximum-quality 50]
+      (is (= maximum-quality (:quality (first (update-quality [aged-brie])))))
+      (is (= maximum-quality (:quality (first (update-quality [backstage-passes-far])))))
+      (is (= maximum-quality (:quality (first (update-quality [backstage-passes-close])))))
+      (is (= maximum-quality (:quality (first (update-quality [backstage-passes-very-close])))))))
   (testing "The quality of an item is never negative"
     (let [normal-item (item "+5 Dexterity Vest" 5 0)
           updated-quality 0]
