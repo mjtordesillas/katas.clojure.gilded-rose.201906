@@ -42,9 +42,11 @@
       (is (= maximum-quality (:quality (first (update-quality [backstage-passes-close])))))
       (is (= maximum-quality (:quality (first (update-quality [backstage-passes-very-close])))))))
   (testing "The quality of an item is never negative"
-    (let [normal-item (item "+5 Dexterity Vest" 5 0)
+    (let [expired-item (item "+5 Dexterity Vest" 0 1)
+          normal-item (item "+5 Dexterity Vest" 5 0)
           updated-quality 0]
-      (is (= updated-quality (:quality (first (update-quality [normal-item])))))))
+      (is (= updated-quality (:quality (first (update-quality [normal-item])))))
+      (is (= updated-quality (:quality (first (update-quality [expired-item])))))))
   (testing "Backstage passes increases in quality as sell in date approaches"
     (let [backstage-passes (item "Backstage passes to a TAFKAL80ETC concert" 20 0)
           updated-quality 1]
