@@ -33,11 +33,13 @@
       (is (= updated-quality (:quality (first (update-quality [sulfuras])))))))
   (testing "The quality of an item is never more than 50"
     (let [aged-brie (item "Aged Brie" 5 50)
+          really-aged-brie (item "Aged Brie" 0 49)
           backstage-passes-far (item "Backstage passes to a TAFKAL80ETC concert" 20 50)
           backstage-passes-close (item "Backstage passes to a TAFKAL80ETC concert" 10 50)
           backstage-passes-very-close (item "Backstage passes to a TAFKAL80ETC concert" 5 50)
           maximum-quality 50]
       (is (= maximum-quality (:quality (first (update-quality [aged-brie])))))
+      (is (= maximum-quality (:quality (first (update-quality [really-aged-brie])))))
       (is (= maximum-quality (:quality (first (update-quality [backstage-passes-far])))))
       (is (= maximum-quality (:quality (first (update-quality [backstage-passes-close])))))
       (is (= maximum-quality (:quality (first (update-quality [backstage-passes-very-close])))))))
