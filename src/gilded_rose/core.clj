@@ -38,7 +38,7 @@
     (map (fn [item]
            (if (not= "Sulfuras, Hand of Ragnaros" (:name item))
              (merge item {:sell-in (dec (:sell-in item))})
-             item))
+             (merge item {:quality 80})))
          items)))
 
 (defn item [item-name, sell-in, quality]

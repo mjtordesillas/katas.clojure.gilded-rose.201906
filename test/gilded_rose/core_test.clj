@@ -27,10 +27,12 @@
     (let [aged-brie (item "Aged Brie" 0 5)
           updated-quality 7]
       (is (= updated-quality (:quality (first (update-quality [aged-brie])))))))
-  (testing "Sulfuras quality never changes"
+  (testing "Sulfuras quality is always 80 and never ages"
     (let [sulfuras (item "Sulfuras, Hand of Ragnaros" 5 5)
-          updated-quality 5]
-      (is (= updated-quality (:quality (first (update-quality [sulfuras])))))))
+          updated-quality 80
+          updated-sell-in 5]
+      (is (= updated-quality (:quality (first (update-quality [sulfuras])))))
+      (is (= updated-sell-in (:sell-in (first (update-quality [sulfuras])))))))
   (testing "The quality of an item is never more than 50"
     (let [aged-brie (item "Aged Brie" 5 50)
           really-aged-brie (item "Aged Brie" 0 49)
