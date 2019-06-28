@@ -1,8 +1,8 @@
 (ns gilded-rose.core
   (:gen-class))
 
-(defn- increment-item-quality [item]
-  (merge item {:quality (inc (:quality item))}))
+(defn- update-item-quality-by [item delta]
+  (merge item {:quality (+ (:quality item) delta)}))
 
 (defn update-quality [items]
   (map
@@ -12,32 +12,32 @@
                   (merge item {:quality 0})
                   (if (and (>= (:sell-in item) 5) (< (:sell-in item) 10) (< (:quality item) 50))
                   (if (<= (:quality item) 48)
-                    (merge item {:quality (inc (inc (:quality item)))})
-                    (increment-item-quality item))
+                    (update-item-quality-by item 2)
+                    (update-item-quality-by item 1))
                   (if (and (>= (:sell-in item) 0) (< (:sell-in item) 5) (< (:quality item) 50))
                     (if (<= (:quality item) 47)
-                      (merge item {:quality (inc (inc (inc (:quality item))))})
+                      (update-item-quality-by item 3)
                         (if (<= (:quality item) 48)
-                          (merge item {:quality (inc (inc (:quality item)))})
-                          (merge item {:quality (inc (:quality item))})))
+                          (update-item-quality-by item 2)
+                          (update-item-quality-by item 1)))
                     (if (< (:quality item) 50)
                       (merge item {:quality (inc (:quality item))})
                       item))))
                 (= (:name item) "Aged Brie")
                 (if (and (< (:sell-in item) 0) (< (:quality item) 50))
                   (if (<= (:quality item) 48)
-                    (merge item {:quality (inc (inc (:quality item)))})
-                    (merge item {:quality (inc (:quality item))}))
+                    (update-item-quality-by item 2)
+                    (update-item-quality-by item 1))
                   (if (< (:quality item) 50)
-                    (merge item {:quality (inc (:quality item))})
+                    (update-item-quality-by item 1)
                     item))
                 (and (or (= "+5 Dexterity Vest" (:name item)) (= "Elixir of the Mongoose" (:name item))))
                 (if (< (:sell-in item) 0)
                   (if (> (:quality item) 1)
-                    (merge item {:quality (- (:quality item) 2)})
+                    (update-item-quality-by item -2)
                     (merge item {:quality 0}))
                   (if (> (:quality item) 0)
-                    (merge item {:quality (dec (:quality item))})
+                    (update-item-quality-by item -1)
                     item))
                 :else item))
     (map (fn [item]
