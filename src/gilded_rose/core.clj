@@ -1,6 +1,9 @@
 (ns gilded-rose.core
   (:gen-class))
 
+(defn- increment-item-quality [item]
+  (merge item {:quality (inc (:quality item))}))
+
 (defn update-quality [items]
   (map
     (fn[item] (cond
@@ -10,7 +13,7 @@
                   (if (and (>= (:sell-in item) 5) (< (:sell-in item) 10) (< (:quality item) 50))
                   (if (<= (:quality item) 48)
                     (merge item {:quality (inc (inc (:quality item)))})
-                    (merge item {:quality (inc (:quality item))}))
+                    (increment-item-quality item))
                   (if (and (>= (:sell-in item) 0) (< (:sell-in item) 5) (< (:quality item) 50))
                     (if (<= (:quality item) 47)
                       (merge item {:quality (inc (inc (inc (:quality item))))})
