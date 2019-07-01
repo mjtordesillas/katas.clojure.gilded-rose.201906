@@ -36,6 +36,18 @@
       (update-item-quality-by item 1)
       item)))
 
+(defmethod update-item-quality :default [item]
+  (if (< (:sell-in item) 0)
+    (if (> (:quality item) 1)
+      (update-item-quality-by item -2)
+      (merge item {:quality 0}))
+    (if (> (:quality item) 0)
+      (update-item-quality-by item -1)
+      item)))
+
+(defmethod update-item-quality "Sulfuras, Hand of Ragnaros" [item]
+  (merge item {:quality 80}))
+
 (defn update-quality [items]
   (map
     (fn[item] (cond
@@ -43,15 +55,9 @@
                 (update-item-quality item)
                 (= (:name item) "Aged Brie")
                 (update-item-quality item)
-                (and (or (= "+5 Dexterity Vest" (:name item)) (= "Elixir of the Mongoose" (:name item))))
-                (if (< (:sell-in item) 0)
-                  (if (> (:quality item) 1)
-                    (update-item-quality-by item -2)
-                    (merge item {:quality 0}))
-                  (if (> (:quality item) 0)
-                    (update-item-quality-by item -1)
-                    item))
-                :else (merge item {:quality 80})))
+                (or (= "+5 Dexterity Vest" (:name item)) (= "Elixir of the Mongoose" (:name item)))
+                (update-item-quality item)
+                :else (update-item-quality)))
     (map (fn [item]
            (if (not= "Sulfuras, Hand of Ragnaros" (:name item))
              (age-one-day item)
