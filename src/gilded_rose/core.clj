@@ -4,6 +4,9 @@
 (defn- update-item-quality-by [item delta]
   (merge item {:quality (+ (:quality item) delta)}))
 
+(defn- age-one-day [item]
+  (merge item {:sell-in (dec (:sell-in item))}))
+
 (defn update-quality [items]
   (map
     (fn[item] (cond
@@ -42,7 +45,7 @@
                 :else (merge item {:quality 80})))
     (map (fn [item]
            (if (not= "Sulfuras, Hand of Ragnaros" (:name item))
-             (merge item {:sell-in (dec (:sell-in item))})
+             (age-one-day item)
              item))
          items)))
 
