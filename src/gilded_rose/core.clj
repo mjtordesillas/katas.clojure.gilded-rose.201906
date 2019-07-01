@@ -50,14 +50,7 @@
 
 (defn update-quality [items]
   (map
-    (fn[item] (cond
-                (= (:name item) "Backstage passes to a TAFKAL80ETC concert")
-                (update-item-quality item)
-                (= (:name item) "Aged Brie")
-                (update-item-quality item)
-                (or (= "+5 Dexterity Vest" (:name item)) (= "Elixir of the Mongoose" (:name item)))
-                (update-item-quality item)
-                :else (update-item-quality)))
+    (fn[item] (update-item-quality item))
     (map (fn [item]
            (if (not= "Sulfuras, Hand of Ragnaros" (:name item))
              (age-one-day item)
