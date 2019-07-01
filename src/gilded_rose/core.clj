@@ -39,11 +39,11 @@
                   (if (> (:quality item) 0)
                     (update-item-quality-by item -1)
                     item))
-                :else item))
+                :else (merge item {:quality 80})))
     (map (fn [item]
            (if (not= "Sulfuras, Hand of Ragnaros" (:name item))
              (merge item {:sell-in (dec (:sell-in item))})
-             (merge item {:quality 80})))
+             item))
          items)))
 
 (defn item [item-name, sell-in, quality]
