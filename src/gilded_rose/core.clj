@@ -7,7 +7,10 @@
 (defn- age-one-day [item]
   (merge item {:sell-in (dec (:sell-in item))}))
 
-(defn- update-backstage-passes [item]
+(defmulti update-item-quality
+          (fn [item] (:name item)))
+
+(defmethod update-item-quality "Backstage passes to a TAFKAL80ETC concert" [item]
   (if (< (:sell-in item) 0)
     (merge item {:quality 0})
     (if (and (>= (:sell-in item) 5) (< (:sell-in item) 10) (< (:quality item) 50))
@@ -24,19 +27,22 @@
           (merge item {:quality (inc (:quality item))})
           item)))))
 
+(defmethod update-item-quality "Aged Brie" [item]
+  (if (and (< (:sell-in item) 0) (< (:quality item) 50))
+    (if (<= (:quality item) 48)
+      (update-item-quality-by item 2)
+      (update-item-quality-by item 1))
+    (if (< (:quality item) 50)
+      (update-item-quality-by item 1)
+      item)))
+
 (defn update-quality [items]
   (map
     (fn[item] (cond
                 (= (:name item) "Backstage passes to a TAFKAL80ETC concert")
-                (update-backstage-passes item)
+                (update-item-quality item)
                 (= (:name item) "Aged Brie")
-                (if (and (< (:sell-in item) 0) (< (:quality item) 50))
-                  (if (<= (:quality item) 48)
-                    (update-item-quality-by item 2)
-                    (update-item-quality-by item 1))
-                  (if (< (:quality item) 50)
-                    (update-item-quality-by item 1)
-                    item))
+                (update-item-quality item)
                 (and (or (= "+5 Dexterity Vest" (:name item)) (= "Elixir of the Mongoose" (:name item))))
                 (if (< (:sell-in item) 0)
                   (if (> (:quality item) 1)
