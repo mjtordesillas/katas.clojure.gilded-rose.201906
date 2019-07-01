@@ -7,25 +7,28 @@
 (defn- age-one-day [item]
   (merge item {:sell-in (dec (:sell-in item))}))
 
+(defn- update-backstage-passes [item]
+  (if (< (:sell-in item) 0)
+    (merge item {:quality 0})
+    (if (and (>= (:sell-in item) 5) (< (:sell-in item) 10) (< (:quality item) 50))
+      (if (<= (:quality item) 48)
+        (update-item-quality-by item 2)
+        (update-item-quality-by item 1))
+      (if (and (>= (:sell-in item) 0) (< (:sell-in item) 5) (< (:quality item) 50))
+        (if (<= (:quality item) 47)
+          (update-item-quality-by item 3)
+          (if (<= (:quality item) 48)
+            (update-item-quality-by item 2)
+            (update-item-quality-by item 1)))
+        (if (< (:quality item) 50)
+          (merge item {:quality (inc (:quality item))})
+          item)))))
+
 (defn update-quality [items]
   (map
     (fn[item] (cond
                 (= (:name item) "Backstage passes to a TAFKAL80ETC concert")
-                (if (< (:sell-in item) 0)
-                  (merge item {:quality 0})
-                  (if (and (>= (:sell-in item) 5) (< (:sell-in item) 10) (< (:quality item) 50))
-                  (if (<= (:quality item) 48)
-                    (update-item-quality-by item 2)
-                    (update-item-quality-by item 1))
-                  (if (and (>= (:sell-in item) 0) (< (:sell-in item) 5) (< (:quality item) 50))
-                    (if (<= (:quality item) 47)
-                      (update-item-quality-by item 3)
-                        (if (<= (:quality item) 48)
-                          (update-item-quality-by item 2)
-                          (update-item-quality-by item 1)))
-                    (if (< (:quality item) 50)
-                      (merge item {:quality (inc (:quality item))})
-                      item))))
+                (update-backstage-passes item)
                 (= (:name item) "Aged Brie")
                 (if (and (< (:sell-in item) 0) (< (:quality item) 50))
                   (if (<= (:quality item) 48)
