@@ -1,8 +1,18 @@
 (ns gilded-rose.core
   (:gen-class))
 
+(def maximum-quality 50)
+(def minimum-quality 0)
+
 (defn- update-item-quality-by [item delta]
-  (merge item {:quality (+ (:quality item) delta)}))
+  (let [updated-quality (+ (:quality item) delta)]
+    (cond
+      (> updated-quality maximum-quality)
+      (merge item {:quality maximum-quality})
+      (< updated-quality minimum-quality)
+      (merge item {:quality minimum-quality})
+      :else
+      (merge item {:quality updated-quality}))))
 
 (defn- age-one-day [item]
   (merge item {:sell-in (dec (:sell-in item))}))
