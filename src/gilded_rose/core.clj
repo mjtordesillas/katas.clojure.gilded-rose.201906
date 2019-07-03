@@ -7,12 +7,9 @@
 (defn- update-item-quality-by [item delta]
   (let [updated-quality (+ (:quality item) delta)]
     (cond
-      (> updated-quality maximum-quality)
-      (merge item {:quality maximum-quality})
-      (< updated-quality minimum-quality)
-      (merge item {:quality minimum-quality})
-      :else
-      (merge item {:quality updated-quality}))))
+      (> updated-quality maximum-quality) (merge item {:quality maximum-quality})
+      (< updated-quality minimum-quality) (merge item {:quality minimum-quality})
+      :else (merge item {:quality updated-quality}))))
 
 (defn- expired? [item]
   (< (:sell-in item) 0))
@@ -33,13 +30,11 @@
           (fn [item] (:name item)))
 
 (defmethod update-item "Backstage passes to a TAFKAL80ETC concert" [item]
-  (if (expired? item)
-    (merge item {:quality 0})
-    (if (item-sell-in-range? item 5 10)
-      (update-item-quality-by item 2)
-      (if (item-sell-in-range? item 0 5)
-        (update-item-quality-by item 3)
-        (update-item-quality-by item 1)))))
+  (cond
+    (expired? item) (merge item {:quality 0})
+    (item-sell-in-range? item 5 10) (update-item-quality-by item 2)
+    (item-sell-in-range? item 0 5) (update-item-quality-by item 3)
+    :else (update-item-quality-by item 1)))
 
 (defmethod update-item "Aged Brie" [item]
   (if (expired? item)
