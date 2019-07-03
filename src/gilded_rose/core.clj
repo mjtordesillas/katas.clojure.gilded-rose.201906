@@ -14,6 +14,12 @@
       :else
       (merge item {:quality updated-quality}))))
 
+(defn- expired? [item]
+  (< (:sell-in item) 0))
+
+(defn- item-sell-in-range? [item start end]
+  (and (>= (:sell-in item) start) (< (:sell-in item) end)))
+
 (defmulti age-item
           (fn [item] (:name item)))
 
@@ -27,21 +33,21 @@
           (fn [item] (:name item)))
 
 (defmethod update-item "Backstage passes to a TAFKAL80ETC concert" [item]
-  (if (< (:sell-in item) 0)
+  (if (expired? item)
     (merge item {:quality 0})
-    (if (and (>= (:sell-in item) 5) (< (:sell-in item) 10))
+    (if (item-sell-in-range? item 5 10)
       (update-item-quality-by item 2)
-      (if (and (>= (:sell-in item) 0) (< (:sell-in item) 5))
+      (if (item-sell-in-range? item 0 5)
         (update-item-quality-by item 3)
         (update-item-quality-by item 1)))))
 
 (defmethod update-item "Aged Brie" [item]
-  (if (< (:sell-in item) 0)
+  (if (expired? item)
     (update-item-quality-by item 2)
     (update-item-quality-by item 1)))
 
 (defmethod update-item :default [item]
-  (if (< (:sell-in item) 0)
+  (if (expired? item)
     (update-item-quality-by item -2)
     (update-item-quality-by item -1)))
 
