@@ -78,4 +78,14 @@
   (testing "Backstage passes quality drops to 0 when sell in date has passed"
     (let [backstage-passes (item "Backstage passes to a TAFKAL80ETC concert" 0 30)
           updated-quality 0]
-      (is (= updated-quality (:quality (first (update-quality [backstage-passes]))))))))
+      (is (= updated-quality (:quality (first (update-quality [backstage-passes])))))))
+
+  (testing "Conjured items degrade in quality twice as fast than a normal item"
+    (let [conjured-item (item "Conjured" 20 30)
+          updated-quality 28]
+      (is (= updated-quality (:quality (first (update-quality [conjured-item])))))))
+
+  (testing "Conjured items degrade in quality twice as fast when sell in date has passed"
+    (let [conjured-item (item "Conjured" 0 30)
+          updated-quality 26]
+      (is (= updated-quality (:quality (first (update-quality [conjured-item]))))))))

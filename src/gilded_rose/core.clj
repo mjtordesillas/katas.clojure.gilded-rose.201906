@@ -41,6 +41,11 @@
     (update-item-quality-by item 2)
     (update-item-quality-by item 1)))
 
+(defmethod update-item "Conjured" [item]
+  (if (expired? item)
+    (update-item-quality-by item -4)
+    (update-item-quality-by item -2)))
+
 (defmethod update-item :default [item]
   (if (expired? item)
     (update-item-quality-by item -2)
