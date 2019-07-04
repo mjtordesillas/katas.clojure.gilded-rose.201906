@@ -26,37 +26,42 @@
 (defmethod age-item :default [item]
   (merge item {:sell-in (dec (:sell-in item))}))
 
-(defmulti update-item
+(defmulti update-item-quality
           (fn [item] (:name item)))
 
-(defmethod update-item "Backstage passes to a TAFKAL80ETC concert" [item]
+(defmethod update-item-quality "Backstage passes to a TAFKAL80ETC concert" [item]
   (cond
     (expired? item) (merge item {:quality 0})
     (item-sell-in-range? item 5 10) (update-item-quality-by item 2)
     (item-sell-in-range? item 0 5) (update-item-quality-by item 3)
     :else (update-item-quality-by item 1)))
 
-(defmethod update-item "Aged Brie" [item]
+(defmethod update-item-quality "Aged Brie" [item]
   (if (expired? item)
     (update-item-quality-by item 2)
     (update-item-quality-by item 1)))
 
-(defmethod update-item "Conjured" [item]
+(defmethod update-item-quality "Conjured" [item]
   (if (expired? item)
     (update-item-quality-by item -4)
     (update-item-quality-by item -2)))
 
-(defmethod update-item :default [item]
+(defmethod update-item-quality :default [item]
   (if (expired? item)
     (update-item-quality-by item -2)
     (update-item-quality-by item -1)))
 
-(defmethod update-item "Sulfuras, Hand of Ragnaros" [item]
+(defmethod update-item-quality "Sulfuras, Hand of Ragnaros" [item]
   (merge item {:quality 80}))
+
+(defn- update-item [item]
+  (-> item
+      (age-item)
+      (update-item-quality)))
 
 (defn update-quality [items]
   (map
-    (fn [item] (update-item (age-item item)))
+    (fn [item] (update-item item))
     items))
 
 (defn item [item-name, sell-in, quality]
